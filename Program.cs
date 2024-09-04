@@ -122,7 +122,7 @@ namespace BasicLibrary
                         break;
 
                     case "C":
-                        //ReturnBook();
+                        ReturnBook();
                         break;
 
                     case "D":
@@ -221,11 +221,12 @@ namespace BasicLibrary
             Console.WriteLine("Enter Book Author");
             string author = Console.ReadLine();
 
-            Console.WriteLine("Enter Book ID");
-            int ID = int.Parse(Console.ReadLine());
+            
+            int ID = GetIntegerInputWithException("Enter Book ID ");
 
-            Console.WriteLine("Enter Book Quantity");
-            int qnt = int.Parse(Console.ReadLine());
+            
+            int qnt = GetIntegerInputWithException("Enter Book Quantity ");
+
 
             Books.Add((name, author, ID, qnt));
             Console.WriteLine("Book Added Succefully");
@@ -275,7 +276,24 @@ namespace BasicLibrary
             { Console.WriteLine("book not found"); }
         }
 
-        
+        static int GetIntegerInputWithException(string prompt)
+{
+    while (true)
+    {
+        Console.WriteLine(prompt);
+        string input = Console.ReadLine();
+
+        try
+        {
+            return Convert.ToInt32(input);
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Invalid input. Please enter a valid integer.");
+        }
+    }
+}
+
         
         static void LoadBooksFromFile()
         {
