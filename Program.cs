@@ -187,6 +187,29 @@ namespace BasicLibrary
             Console.WriteLine("Book not found.");
         }
 
+        static void ReturnBook()
+        {
+            Console.WriteLine("Enter the book name you want to return:");
+            string name = Console.ReadLine();
+
+            // Find the book with the specified name
+            for (int i = 0; i < Books.Count; i++)
+            {
+                var book = Books[i];
+
+                if (book.BName.Equals(name, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Update quantity
+                    Books[i] = (book.BName, book.BAuthor, book.ID, book.Qnt + 1);
+
+                    Console.WriteLine($"You have successfully returned '{book.BName}'.");
+                    return; // Exit the method after processing
+                }
+            }
+
+            
+            Console.WriteLine("Book not found.");
+        }
 
 
 
