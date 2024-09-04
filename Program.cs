@@ -10,10 +10,46 @@ namespace BasicLibrary
         static void Main(string[] args)
         {
             bool ExitFlag = false;
+
             LoadBooksFromFile();
+
             do
             {
-                Console.WriteLine("Welcome to Lirary");
+                Console.WriteLine("Choose 1 for admin Or 2 for user Or 3 for Save & Exit:");
+                string choice = Console.ReadLine();
+                switch (choice)
+                {
+
+                    case "1":
+                        AdminMenu();
+                        break;
+
+                    case "2":
+                        UserMenu();
+                        break;
+
+                    case "3":
+                        SaveBooksToFile();
+                        ExitFlag = true;
+                        break;
+
+                    default:
+                        Console.WriteLine("enter correct choice");
+                        break;
+                }
+            }while (ExitFlag != true);  
+
+
+
+        }
+       
+        static void AdminMenu()
+        {
+            bool ExitFlag = false;
+
+            do
+            {
+                Console.WriteLine("Welcome Admin");
                 Console.WriteLine("\n Enter the char of operation you need :");
                 Console.WriteLine("\n A- Add New Book");
                 Console.WriteLine("\n B- Display All Books");
@@ -37,7 +73,6 @@ namespace BasicLibrary
                         break;
 
                     case "D":
-                        SaveBooksToFile();
                         ExitFlag = true;
                         break;
 
@@ -55,7 +90,65 @@ namespace BasicLibrary
                 Console.Clear();
 
             } while (ExitFlag != true);
+
         }
+
+
+        static void UserMenu()
+        {
+
+            bool ExitFlag = false;
+
+            do
+            {
+                Console.WriteLine("Welcome User");
+                Console.WriteLine("\n Enter the char of operation you need :");
+                Console.WriteLine("\n A- Search for Book by Name");
+                Console.WriteLine("\n B- Borrow Book");
+                Console.WriteLine("\n C- Return Book ");
+                Console.WriteLine("\n D- Save and Exit");
+
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "A":
+                        SearchForBook();
+                        break;
+
+                    case "B":
+                       // BorrowBook();
+                        break;
+
+                    case "C":
+                        //ReturnBook();
+                        break;
+
+                    case "D":
+                        ExitFlag = true;
+                        break;
+
+                    default:
+                        Console.WriteLine("Sorry your choice was wrong");
+                        break;
+
+
+
+                }
+
+                Console.WriteLine("press any key to continue");
+                string cont = Console.ReadLine();
+
+                Console.Clear();
+
+            } while (ExitFlag != true);
+
+
+        }
+        
+        
+        
+        
         static void AddnNewBook() 
         { 
                  Console.WriteLine("Enter Book Name");
