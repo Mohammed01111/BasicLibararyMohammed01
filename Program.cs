@@ -109,7 +109,7 @@ namespace BasicLibrary
                 Console.WriteLine("\n C- Return Book ");
                 Console.WriteLine("\n D- Save and Exit");
 
-                string choice = Console.ReadLine();
+                string choice = Console.ReadLine().ToUpper();
 
                 switch (choice)
                 {
@@ -118,7 +118,7 @@ namespace BasicLibrary
                         break;
 
                     case "B":
-                        // BorrowBook();
+                        BorrowBook();
                         break;
 
                     case "C":
@@ -145,6 +145,46 @@ namespace BasicLibrary
             } while (ExitFlag != true);
 
 
+        }
+        static void BorrowBook()
+        {
+            Console.WriteLine("Enter the book name you want to borrow:");
+            string name = Console.ReadLine();
+
+            
+            for (int i = 0; i < Books.Count; i++)
+            {
+                var book = Books[i];
+
+                if (book.BName.Equals(name, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (book.Qnt <= 0)
+                    {
+                        Console.WriteLine("Sorry, this book is currently not available.");
+                        return;
+                    }
+
+                    Console.WriteLine($"You have selected '{book.BName}' by {book.BAuthor}. Quantity available: {book.Qnt}");
+                    Console.WriteLine("Do you want to borrow this book? (yes/no)");
+                    string confirm = Console.ReadLine();
+
+                    if (confirm.Equals("yes", StringComparison.OrdinalIgnoreCase))
+                    {
+                        
+                        Books[i] = (book.BName, book.BAuthor, book.ID, book.Qnt - 1);
+
+                        Console.WriteLine($"You have successfully borrowed '{book.BName}'.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Borrowing canceled.");
+                    }
+                    return; 
+                }
+            }
+
+            
+            Console.WriteLine("Book not found.");
         }
 
 
@@ -211,27 +251,8 @@ namespace BasicLibrary
             if (flag != true)
             { Console.WriteLine("book not found"); }
         }
-        static void BorrowBook() {
-            Console.WriteLine("Enter the book name you want to borrow:");
-            string name = Console.ReadLine();
 
-            // Find the book with the specified name
-            var book = Books.FirstOrDefault(b => b.BName.Equals(name, StringComparison.OrdinalIgnoreCase));
-
-            if (book.Equals(default((string BName, string BAuthor, int ID, int Qnt))))
-            {
-                Console.WriteLine("Book not found.");
-                return;
-            }
-
-            if (book.Qnt <= 0)
-            {
-                Console.WriteLine("Sorry, this book is currently not available.");
-                return;
-            }
-            Console.WriteLine($"You have selected '{book.BName}' by {book.BAuthor}. Quantity available: {book.Qnt}");
-
-        }
+        
         
         static void LoadBooksFromFile()
         {
