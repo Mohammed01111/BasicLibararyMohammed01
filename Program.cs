@@ -5,10 +5,10 @@ namespace BasicLibrary
     internal class Program
     {
         static List<(string BName, string BAuthor, int ID, int Qnt)> Books = new List<(string BName, string BAuthor, int ID, int Qnt)>();
-        static string filePath = "C:\\Users\\Karim\\Downloads\\OutSystem_Course\\GitHubRepos\\Data\\lib.txt";
+        static string filePath = "C:\\Users\\codeline user\\Documents\\lib.txt";
 
         static void Main(string[] args)
-            //checkout
+        //checkout
         {// downloaded form ahmed device 
             bool ExitFlag = false;
 
@@ -38,12 +38,12 @@ namespace BasicLibrary
                         Console.WriteLine("enter correct choice");
                         break;
                 }
-            }while (ExitFlag != true);  
+            } while (ExitFlag != true);
 
 
 
         }
-       
+
         static void AdminMenu()
         {
             bool ExitFlag = false;
@@ -57,7 +57,7 @@ namespace BasicLibrary
                 Console.WriteLine("\n C- Search for Book by Name");
                 Console.WriteLine("\n D- Save and Exit");
 
-                string choice = Console.ReadLine();
+                string choice = Console.ReadLine().ToUpper();
 
                 switch (choice)
                 {
@@ -118,7 +118,7 @@ namespace BasicLibrary
                         break;
 
                     case "B":
-                       // BorrowBook();
+                        // BorrowBook();
                         break;
 
                     case "C":
@@ -146,26 +146,26 @@ namespace BasicLibrary
 
 
         }
-        
-        
-        
-        
-        static void AddnNewBook() 
-        { 
-                 Console.WriteLine("Enter Book Name");
-                 string name = Console.ReadLine();   
 
-                 Console.WriteLine("Enter Book Author");
-                 string author= Console.ReadLine();  
 
-                 Console.WriteLine("Enter Book ID");
-                 int ID = int.Parse(Console.ReadLine());
+
+
+        static void AddnNewBook()
+        {
+            Console.WriteLine("Enter Book Name");
+            string name = Console.ReadLine();
+
+            Console.WriteLine("Enter Book Author");
+            string author = Console.ReadLine();
 
             Console.WriteLine("Enter Book ID");
+            int ID = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Enter Book Quantity");
             int qnt = int.Parse(Console.ReadLine());
 
-            Books.Add(  ( name, author, ID, qnt )  );
-                  Console.WriteLine("Book Added Succefully");
+            Books.Add((name, author, ID, qnt));
+            Console.WriteLine("Book Added Succefully");
 
         }
 
@@ -176,13 +176,15 @@ namespace BasicLibrary
             int BookNumber = 0;
 
             for (int i = 0; i < Books.Count; i++)
-            {             
+            {
                 BookNumber = i + 1;
                 sb.Append("Book ").Append(BookNumber).Append(" name : ").Append(Books[i].BName);
                 sb.AppendLine();
                 sb.Append("Book ").Append(BookNumber).Append(" Author : ").Append(Books[i].BAuthor);
                 sb.AppendLine();
                 sb.Append("Book ").Append(BookNumber).Append(" ID : ").Append(Books[i].ID);
+                sb.AppendLine();
+                sb.Append("Book ").Append(BookNumber).Append(" Quantity : ").Append(Books[i].Qnt);
                 sb.AppendLine().AppendLine();
                 Console.WriteLine(sb.ToString());
                 sb.Clear();
@@ -193,10 +195,10 @@ namespace BasicLibrary
         static void SearchForBook()
         {
             Console.WriteLine("Enter the book name you want");
-            string name = Console.ReadLine();  
-            bool flag=false;
+            string name = Console.ReadLine();
+            bool flag = false;
 
-            for(int i = 0; i< Books.Count;i++)
+            for (int i = 0; i < Books.Count; i++)
             {
                 if (Books[i].BName == name)
                 {
@@ -209,7 +211,28 @@ namespace BasicLibrary
             if (flag != true)
             { Console.WriteLine("book not found"); }
         }
+        static void BorrowBook() {
+            Console.WriteLine("Enter the book name you want to borrow:");
+            string name = Console.ReadLine();
 
+            // Find the book with the specified name
+            var book = Books.FirstOrDefault(b => b.BName.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+            if (book.Equals(default((string BName, string BAuthor, int ID, int Qnt))))
+            {
+                Console.WriteLine("Book not found.");
+                return;
+            }
+
+            if (book.Qnt <= 0)
+            {
+                Console.WriteLine("Sorry, this book is currently not available.");
+                return;
+            }
+            Console.WriteLine($"You have selected '{book.BName}' by {book.BAuthor}. Quantity available: {book.Qnt}");
+
+        }
+        
         static void LoadBooksFromFile()
         {
             try
