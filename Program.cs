@@ -24,11 +24,17 @@ namespace BasicLibrary
                 {
 
                     case "1":
-                        AdminMenu();
+                        if (Authenticate("admin"))
+                        {
+                            AdminMenu();
+                        }
                         break;
 
                     case "2":
-                        UserMenu();
+                        if (Authenticate("user"))
+                        {
+                            UserMenu();
+                        }
                         break;
 
                     case "3":
@@ -45,7 +51,39 @@ namespace BasicLibrary
 
 
         }
+        static bool Authenticate(string role)
+        {
+            string filePath = role == "admin" ? adminFilePath : userFilePath;
+            Console.WriteLine($"Enter {role} username:");
+            string username = Console.ReadLine();
 
+            Console.WriteLine($"Enter {role} password:");
+            string password = Console.ReadLine();
+
+            try
+            {
+                var credentials = File.ReadAllLines(filePath);
+                foreach (var credential in credentials)
+                {
+                    var parts = credential.Split(':');
+                    if (parts.Length == 2)
+                    {
+                        if (username == parts[0] && password == parts[1])
+                        {
+                            Console.WriteLine($"{role} authenticated successfully.");
+                            return true;
+                        }
+                    }
+                }
+                Console.WriteLine($"{role} authentication failed.");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading credentials file: {ex.Message}");
+                return false;
+            }
+        }
         static void AdminMenu()
         {
             bool ExitFlag = false;
