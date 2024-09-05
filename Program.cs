@@ -6,6 +6,8 @@ namespace BasicLibrary
     {
         static List<(string BName, string BAuthor, int ID, int Qnt)> Books = new List<(string BName, string BAuthor, int ID, int Qnt)>();
         static string filePath = "C:\\Users\\codeline user\\Documents\\lib.txt";
+        static string adminFilePath = "C:\\Users\\codeline user\\Documents\\admin.txt";
+        static string userFilePath = "C:\\Users\\codeline user\\Documents\\user.txt";
 
         static void Main(string[] args)
         //checkout
