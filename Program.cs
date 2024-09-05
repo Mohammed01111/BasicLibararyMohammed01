@@ -54,8 +54,10 @@ namespace BasicLibrary
                 Console.WriteLine("\n Enter the char of operation you need :");
                 Console.WriteLine("\n A- Add New Book");
                 Console.WriteLine("\n B- Display All Books");
-                Console.WriteLine("\n C- Search for Book by Name");
-                Console.WriteLine("\n D- Save and Exit");
+                Console.WriteLine("\n C- Edit Book");
+                Console.WriteLine("\n D- Remove Book");
+                Console.WriteLine("\n E- Search for Book by Name");
+                Console.WriteLine("\n F- Save and Exit");
 
                 string choice = Console.ReadLine().ToUpper();
 
@@ -70,12 +72,21 @@ namespace BasicLibrary
                         break;
 
                     case "C":
-                        SearchForBook();
+                        EditBook();
                         break;
 
                     case "D":
+                        RemoveBook();
+                        break;
+
+                    case "E":
+                        SearchForBook();
+                        break;
+
+                    case "F":
                         ExitFlag = true;
                         break;
+                    
 
                     default:
                         Console.WriteLine("Sorry your choice was wrong");
@@ -186,7 +197,7 @@ namespace BasicLibrary
             
             Console.WriteLine("Book not found.");
         }
-
+       
         static void ReturnBook()
         {
             Console.WriteLine("Enter the book name you want to return:");
@@ -231,6 +242,54 @@ namespace BasicLibrary
             Books.Add((name, author, ID, qnt));
             Console.WriteLine("Book Added Succefully");
 
+        }
+        static void EditBook()
+        {
+            Console.WriteLine("Enter the Book ID to edit:");
+            int id = GetIntegerInputWithException("");
+
+            for (int i = 0; i < Books.Count; i++)
+            {
+                var book = Books[i];
+
+                if (book.ID == id)
+                {
+                    Console.WriteLine("Enter new Book Name (or press Enter to keep current):");
+                    string name = Console.ReadLine();
+                    if (!string.IsNullOrEmpty(name)) book.BName = name;
+
+                    Console.WriteLine("Enter new Book Author (or press Enter to keep current):");
+                    string author = Console.ReadLine();
+                    if (!string.IsNullOrEmpty(author)) book.BAuthor = author;
+
+                    Console.WriteLine("Enter new Book Quantity (or press Enter to keep current):");
+                    string quantityInput = Console.ReadLine();
+                    if (int.TryParse(quantityInput, out int quantity)) book.Qnt = quantity;
+
+                    Books[i] = book;
+                    Console.WriteLine("Book details updated successfully.");
+                    return;
+                }
+            }
+
+            Console.WriteLine("Book not found.");
+        }
+        static void RemoveBook()
+        {
+            Console.WriteLine("Enter the Book ID to remove:");
+            int id = GetIntegerInputWithException("");
+
+            for (int i = 0; i < Books.Count; i++)
+            {
+                if (Books[i].ID == id)
+                {
+                    Books.RemoveAt(i);
+                    Console.WriteLine("Book removed successfully.");
+                    return;
+                }
+            }
+
+            Console.WriteLine("Book not found.");
         }
 
         static void ViewAllBooks()
