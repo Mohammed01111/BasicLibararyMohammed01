@@ -263,7 +263,6 @@ namespace BasicLibrary
         }
 
 
-
         static void AddnNewBook()
         {
             Console.WriteLine("Enter Book Name");
@@ -376,22 +375,22 @@ namespace BasicLibrary
         }
 
         static int GetIntegerInputWithException(string prompt)
-{
-    while (true)
-    {
-        Console.WriteLine(prompt);
-        string input = Console.ReadLine();
+        {
+            while (true)
+            {
+                Console.WriteLine(prompt);
+                string input = Console.ReadLine();
 
-        try
-        {
-            return Convert.ToInt32(input);
+                try
+                {
+                    return Convert.ToInt32(input);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid integer.");
+                }
+            }
         }
-        catch (FormatException)
-        {
-            Console.WriteLine("Invalid input. Please enter a valid integer.");
-        }
-    }
-}
 
         
         static void LoadBooksFromFile()
