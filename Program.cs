@@ -8,7 +8,7 @@ namespace BasicLibrary
         static string filePath = "C:\\Users\\codeline user\\Documents\\lib.txt";
         static string adminFilePath = "C:\\Users\\codeline user\\Documents\\admin.txt";
         static string userFilePath = "C:\\Users\\codeline user\\Documents\\user.txt";
-
+        
         static void Main(string[] args)
         //checkout
         {// downloaded form ahmed device 
@@ -122,9 +122,12 @@ namespace BasicLibrary
                     case "E":
                         SearchForBook();
                         break;
+                    
 
                     case "F":
+                        SaveBooksToFile();
                         ExitFlag = true;
+
                         break;
                     
 
@@ -158,6 +161,7 @@ namespace BasicLibrary
                 Console.WriteLine("\n A- Search for Book by Name");
                 Console.WriteLine("\n B- Borrow Book");
                 Console.WriteLine("\n C- Return Book ");
+
                 Console.WriteLine("\n D- Save and Exit");
 
                 string choice = Console.ReadLine().ToUpper();
@@ -194,15 +198,18 @@ namespace BasicLibrary
                 Console.Clear();
 
             } while (ExitFlag != true);
-
+            
 
         }
+
+
         static void BorrowBook()
         {
             Console.WriteLine("Enter the book name you want to borrow:");
             string name = Console.ReadLine();
-
             
+
+
             for (int i = 0; i < Books.Count; i++)
             {
                 var book = Books[i];
@@ -242,6 +249,7 @@ namespace BasicLibrary
         {
             Console.WriteLine("Enter the book name you want to return:");
             string name = Console.ReadLine();
+            
 
             // Find the book with the specified name
             for (int i = 0; i < Books.Count; i++)
