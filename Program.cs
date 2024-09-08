@@ -5,6 +5,8 @@ namespace BasicLibrary
     internal class Program
     {
         static List<(string BName, string BAuthor, int ID, int Qnt)> Books = new List<(string BName, string BAuthor, int ID, int Qnt)>();
+        static List<(string BName, int BorrowedCount)> BorrowedBooks = new List<(string BName, int BorrowedCount)>();
+
         static string filePath = "C:\\Users\\codeline user\\Documents\\lib.txt";
         static string adminFilePath = "C:\\Users\\codeline user\\Documents\\admin.txt";
         static string userFilePath = "C:\\Users\\codeline user\\Documents\\user.txt";
@@ -43,7 +45,7 @@ namespace BasicLibrary
                         break;
 
                     default:
-                        Console.WriteLine("enter correct choice");
+                        Console.WriteLine("Enter Correct Choice");
                         break;
                 }
             } while (ExitFlag != true);
@@ -436,7 +438,7 @@ namespace BasicLibrary
                 {
                     foreach (var book in Books)
                     {
-                        writer.WriteLine($"{book.BName}|{book.BAuthor}|{book.ID}");
+                        writer.WriteLine($"{book.BName}|{book.BAuthor}|{book.ID}|{book.Qnt}");
                     }
                 }
                 Console.WriteLine("Books saved to file successfully.");
