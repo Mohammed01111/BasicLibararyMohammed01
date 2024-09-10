@@ -293,6 +293,27 @@ namespace BasicLibrary
             Console.WriteLine("Book not found.");
         }
 
+        static void RecommendBooks()
+        {
+            Console.WriteLine("Recommended Books based on your borrowed books:");
+
+            // Sort borrowed books by count
+            var sortedBorrowedBooks = BorrowedBooks.OrderByDescending(bb => bb.BorrowedCount).ToList();
+
+            foreach (var borrowedBook in sortedBorrowedBooks)
+            {
+                var bookName = borrowedBook.BookName;
+
+                Console.WriteLine($"Since you borrowed '{bookName}' {borrowedBook.BorrowedCount} times, you might also like:");
+
+                // Suggest other books by the same author or similar genre
+                var bookAuthor = Books.FirstOrDefault(b => b.BName.Equals(bookName, StringComparison.OrdinalIgnoreCase)).BAuthor;
+                foreach (var book in Books.Where(b => b.BAuthor == bookAuthor && b.BName != bookName))
+                {
+                    Console.WriteLine($"- '{book.BName}' by {book.BAuthor}");
+                }
+            }
+        }
 
 
         static void AddnNewBook()
