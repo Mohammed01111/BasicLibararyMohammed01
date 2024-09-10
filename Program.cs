@@ -261,26 +261,38 @@ namespace BasicLibrary
         {
             Console.WriteLine("Enter the book name you want to return:");
             string name = Console.ReadLine();
-            
 
-            
             for (int i = 0; i < Books.Count; i++)
             {
                 var book = Books[i];
 
                 if (book.BName.Equals(name, StringComparison.OrdinalIgnoreCase))
                 {
-                    // Update quantity
+                    // Update book quantity
                     Books[i] = (book.BName, book.BAuthor, book.ID, book.Qnt + 1);
 
+                    // Update borrowed books list
+                    var borrowedBook = BorrowedBooks.FirstOrDefault(bb => bb.BookName.Equals(name, StringComparison.OrdinalIgnoreCase));
+                    if (borrowedBook.BookName != null)
+                    {
+                        if (borrowedBook.BorrowedCount > 1)
+                        {
+                            BorrowedBooks[BorrowedBooks.IndexOf(borrowedBook)] = (borrowedBook.BookName, borrowedBook.BorrowedCount - 1);
+                        }
+                        else
+                        {
+                            BorrowedBooks.Remove(borrowedBook);
+                        }
+                    }
+
                     Console.WriteLine($"You have successfully returned '{book.BName}'.");
-                    return; 
+                    return;
                 }
             }
 
-            
             Console.WriteLine("Book not found.");
         }
+
 
 
         static void AddnNewBook()
