@@ -209,8 +209,6 @@ namespace BasicLibrary
         {
             Console.WriteLine("Enter the book name you want to borrow:");
             string name = Console.ReadLine();
-            
-
 
             for (int i = 0; i < Books.Count; i++)
             {
@@ -230,30 +228,42 @@ namespace BasicLibrary
 
                     if (confirm.Equals("yes", StringComparison.OrdinalIgnoreCase))
                     {
-                        
+                        // Update book quantity
                         Books[i] = (book.BName, book.BAuthor, book.ID, book.Qnt - 1);
 
+                        // Update borrowed books list
+                        var borrowedBook = BorrowedBooks.FirstOrDefault(bb => bb.BookName.Equals(name, StringComparison.OrdinalIgnoreCase));
+                        if (borrowedBook.BookName != null)
+                        {
+                            BorrowedBooks[BorrowedBooks.IndexOf(borrowedBook)] = (borrowedBook.BookName, borrowedBook.BorrowedCount + 1);
+                        }
+                        else
+                        {
+                            BorrowedBooks.Add((name, 1));
+                        }
+
                         Console.WriteLine($"You have successfully borrowed '{book.BName}'.");
+                        RecommendBooks();
                     }
                     else
                     {
                         Console.WriteLine("Borrowing canceled.");
                     }
-                    return; 
+                    return;
                 }
             }
 
-            
             Console.WriteLine("Book not found.");
         }
-       
+
+
         static void ReturnBook()
         {
             Console.WriteLine("Enter the book name you want to return:");
             string name = Console.ReadLine();
             
 
-            // Find the book with the specified name
+            
             for (int i = 0; i < Books.Count; i++)
             {
                 var book = Books[i];
@@ -264,7 +274,7 @@ namespace BasicLibrary
                     Books[i] = (book.BName, book.BAuthor, book.ID, book.Qnt + 1);
 
                     Console.WriteLine($"You have successfully returned '{book.BName}'.");
-                    return; // Exit the method after processing
+                    return; 
                 }
             }
 
