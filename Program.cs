@@ -10,7 +10,8 @@ namespace BasicLibrary
         static string filePath = "C:\\Users\\codeline user\\Documents\\lib.txt";
         static string adminFilePath = "C:\\Users\\codeline user\\Documents\\admin.txt";
         static string userFilePath = "C:\\Users\\codeline user\\Documents\\user.txt";
-        
+        static string evalFilePath = "C:\\Users\\codeline user\\Documents\\book_evaluations.txt";
+
         static void Main(string[] args)
         //checkout
         {// downloaded form ahmed device 
@@ -210,50 +211,47 @@ namespace BasicLibrary
             Console.WriteLine("Enter the book name you want to borrow:");
             string name = Console.ReadLine();
 
-            for (int i = 0; i < Books.Count; i++)
+            var book = Books.FirstOrDefault(b => b.BName.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+            if (book == default)
             {
-                var book = Books[i];
-
-                if (book.BName.Equals(name, StringComparison.OrdinalIgnoreCase))
-                {
-                    if (book.Qnt <= 0)
-                    {
-                        Console.WriteLine("Sorry, this book is currently not available.");
-                        return;
-                    }
-
-                    Console.WriteLine($"You have selected '{book.BName}' by {book.BAuthor}. Quantity available: {book.Qnt}");
-                    Console.WriteLine("Do you want to borrow this book? (yes/no)");
-                    string confirm = Console.ReadLine();
-
-                    if (confirm.Equals("yes", StringComparison.OrdinalIgnoreCase))
-                    {
-                        // Update book quantity
-                        Books[i] = (book.BName, book.BAuthor, book.ID, book.Qnt - 1);
-
-                        // Update borrowed books list
-                        var borrowedBook = BorrowedBooks.FirstOrDefault(bb => bb.BookName.Equals(name, StringComparison.OrdinalIgnoreCase));
-                        if (borrowedBook.BookName != null)
-                        {
-                            BorrowedBooks[BorrowedBooks.IndexOf(borrowedBook)] = (borrowedBook.BookName, borrowedBook.BorrowedCount + 1);
-                        }
-                        else
-                        {
-                            BorrowedBooks.Add((name, 1));
-                        }
-
-                        Console.WriteLine($"You have successfully borrowed '{book.BName}'.");
-                        RecommendBooks();
-                    }
-                    else
-                    {
-                        Console.WriteLine("Borrowing canceled.");
-                    }
-                    return;
-                }
+                Console.WriteLine("Book not found.");
+                return;
             }
 
-            Console.WriteLine("Book not found.");
+            if (book.Qnt <= 0)
+            {
+                Console.WriteLine("Sorry, this book is currently not available.");
+                return;
+            }
+
+            Console.WriteLine($"You have selected '{book.BName}' by {book.BAuthor}. Quantity available: {book.Qnt}");
+            Console.WriteLine("Do you want to borrow this book? (yes/no)");
+            string confirm = Console.ReadLine();
+
+            if (confirm.Equals("yes", StringComparison.OrdinalIgnoreCase))
+            {
+                // Update book quantity
+                Books[Books.IndexOf(book)] = (book.BName, book.BAuthor, book.ID, book.Qnt - 1);
+
+                // Update borrowed books list
+                var borrowedBook = BorrowedBooks.FirstOrDefault(bb => bb.BName.Equals(name, StringComparison.OrdinalIgnoreCase));
+                if (borrowedBook.BName != null)
+                {
+                    BorrowedBooks[BorrowedBooks.IndexOf(borrowedBook)] = (borrowedBook.BName, borrowedBook.BorrowedCount + 1);
+                }
+                else
+                {
+                    BorrowedBooks.Add((name, 1));
+                }
+
+                Console.WriteLine($"You have successfully borrowed '{book.BName}'.");
+                RecommendBooks();
+            }
+            else
+            {
+                Console.WriteLine("Borrowing canceled.");
+            }
         }
 
 
@@ -292,28 +290,44 @@ namespace BasicLibrary
 
             Console.WriteLine("Book not found.");
         }
-
         static void RecommendBooks()
         {
+            if (BorrowedBooks.Count == 0)
+            {
+                Console.WriteLine("No recommendations available as no books have been borrowed yet.");
+                return;
+            }
+
             Console.WriteLine("Recommended Books based on your borrowed books:");
 
-            // Sort borrowed books by count
-            var sortedBorrowedBooks = BorrowedBooks.OrderByDescending(bb => bb.BorrowedCount).ToList();
+            var topBorrowedBooks = BorrowedBooks.OrderByDescending(bb => bb.BorrowedCount).ToList();
+            var recommendedBooks = new HashSet<string>();
 
-            foreach (var borrowedBook in sortedBorrowedBooks)
+            foreach (var borrowedBook in topBorrowedBooks)
             {
                 var bookName = borrowedBook.BookName;
 
-                Console.WriteLine($"Since you borrowed '{bookName}' {borrowedBook.BorrowedCount} times, you might also like:");
-
-                // Suggest other books by the same author or similar genre
                 var bookAuthor = Books.FirstOrDefault(b => b.BName.Equals(bookName, StringComparison.OrdinalIgnoreCase)).BAuthor;
-                foreach (var book in Books.Where(b => b.BAuthor == bookAuthor && b.BName != bookName))
+
+                if (bookAuthor != null)
                 {
-                    Console.WriteLine($"- '{book.BName}' by {book.BAuthor}");
+                    foreach (var book in Books.Where(b => b.BAuthor == bookAuthor && b.BName != bookName))
+                    {
+                        if (!recommendedBooks.Contains(book.BName))
+                        {
+                            recommendedBooks.Add(book.BName);
+                            Console.WriteLine($"- '{book.BName}' by {book.BAuthor}");
+                        }
+                    }
                 }
             }
+
+            if (recommendedBooks.Count == 0)
+            {
+                Console.WriteLine("No recommendations available based on the borrowed books.");
+            }
         }
+
 
 
         static void AddnNewBook()
