@@ -610,31 +610,13 @@ namespace BasicLibrary
             }
         }
 
-        static void LoadBooksFromFile()
+        static void LoadDataFromFiles()
         {
-            try
-            {
-                if (File.Exists(filePath))
-                {
-                    using (StreamReader reader = new StreamReader(filePath))
-                    {
-                        string line;
-                        while ((line = reader.ReadLine()) != null)
-                        {
-                            var parts = line.Split('|');
-                            if (parts.Length == 4)
-                            {
-                                Books.Add((parts[0], parts[1], int.Parse(parts[2]), int.Parse(parts[3])));
-                            }
-                        }
-                    }
-                    Console.WriteLine("Books loaded from file successfully.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading from file: {ex.Message}");
-            }
+            LoadUsers();
+            LoadAdmins();
+            LoadCategories();
+            LoadBooks();
+            LoadBorrowingRecords();
         }
 
 
