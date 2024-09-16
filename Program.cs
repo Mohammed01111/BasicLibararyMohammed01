@@ -609,6 +609,20 @@ namespace BasicLibrary
                 }
             }
         }
+        static void LoadFile(string filePath, Action<string> processLine)
+        {
+            if (File.Exists(filePath))
+            {
+                using (StreamReader reader = new StreamReader(filePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        processLine(line);
+                    }
+                }
+            }
+        }
 
         static void LoadDataFromFiles()
         {
