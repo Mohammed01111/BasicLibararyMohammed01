@@ -623,7 +623,98 @@ namespace BasicLibrary
                 }
             }
         }
+        static void LoadUsers()
+        {
+            LoadFile(usersFilePath, line =>
+            {
+                var parts = line.Split('|');
+                if (parts.Length == 4)
+                {
+                    Users.Add((parts[0].Trim(), parts[1].Trim(), parts[2].Trim(), parts[3].Trim()));
+                }
+                else
+                {
+                    Console.WriteLine("Warning: Line format is incorrect in users file.");
+                }
+            });
+        }
 
+        static void LoadAdmins()
+        {
+            LoadFile(adminsFilePath, line =>
+            {
+                var parts = line.Split('|');
+                if (parts.Length == 4)
+                {
+                    Admins.Add((parts[0].Trim(), parts[1].Trim(), parts[2].Trim(), parts[3].Trim()));
+                }
+                else
+                {
+                    Console.WriteLine("Warning: Line format is incorrect in admins file.");
+                }
+            });
+        }
+
+        static void LoadCategories()
+        {
+            Categories.Clear(); // Ensure the Categories list is cleared before loading new data
+
+            LoadFile(categoriesFilePath, line =>
+            {
+                var parts = line.Split('|');
+                if (parts.Length == 3)
+                {
+                    var id = parts[0].Trim();
+                    var name = parts[1].Trim();
+                    if (int.TryParse(parts[2].Trim(), out int nofBooks))
+                    {
+                        Categories.Add((id, name, nofBooks));
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Warning: Invalid number of books for category '{name}'.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Warning: Line format is incorrect.");
+                }
+            });
+        }
+
+
+        static void LoadBooks()
+        {
+            LoadFile(booksFilePath, line =>
+            {
+                // Split and trim each part
+                var parts = line.Split('|').Select(p => p.Trim()).ToArray();
+
+                if (parts.Length == 8)
+                {
+                    // Add the book with trimmed values
+                    Books.Add((parts[0], parts[1], parts[2],
+                               int.Parse(parts[3]),          // Copies Available
+                               int.Parse(parts[4]),          // Borrowed
+                               decimal.Parse(parts[5]),      // Price
+                               parts[6],                     // Category
+                               int.Parse(parts[7])));        // Borrow Period
+                }
+            });
+        }
+
+
+        static void LoadBorrowingRecords()
+        {
+            LoadFile(borrowingFilePath, line =>
+            {
+                var parts = line.Split('|');
+                if (parts.Length == 7)
+                {
+                    BorrowingRecords.Add((parts[0], parts[1], DateTime.Parse(parts[2]), DateTime.Parse(parts[3]), DateTime.Parse(parts[4]), int.Parse(parts[5]), bool.Parse(parts[6])));
+                }
+            });
+        }
         static void LoadDataFromFiles()
         {
             LoadUsers();
