@@ -216,45 +216,39 @@ namespace BasicLibrary
 
         static void BorrowBook()
         {
-            Console.WriteLine("Enter the book name you want to borrow:");
-            string name = Console.ReadLine();
+            Console.WriteLine("Enter your User ID:");
+            string userId = Console.ReadLine();
 
-            var book = Books.FirstOrDefault(b => b.BName.Equals(name, StringComparison.OrdinalIgnoreCase));
+            Console.WriteLine("Enter the book ID you want to borrow:");
+            string bookId = Console.ReadLine();
 
-            if (book == default)
+            var book = Books.FirstOrDefault(b => b.BID.Equals(bookId, StringComparison.OrdinalIgnoreCase));
+
+            if (book.BID == null)
             {
                 Console.WriteLine("Book not found.");
                 return;
             }
 
-            if (book.Qnt <= 0)
+            if (book.Copies <= 0)
             {
                 Console.WriteLine("Sorry, this book is currently not available.");
                 return;
             }
 
-            Console.WriteLine($"You have selected '{book.BName}' by {book.BAuthor}. Quantity available: {book.Qnt}");
+            Console.WriteLine($"You have selected '{book.BName}' by {book.BAuthor}. Copies available: {book.Copies}");
             Console.WriteLine("Do you want to borrow this book? (yes/no)");
             string confirm = Console.ReadLine();
 
             if (confirm.Equals("yes", StringComparison.OrdinalIgnoreCase))
             {
-                // Update book quantity
-                Books[Books.IndexOf(book)] = (book.BName, book.BAuthor, book.ID, book.Qnt - 1);
+                // Update book copies
+                Books = Books.Select(b => b.BID == bookId ? (b.BID, b.BName, b.BAuthor, b.Copies - 1, b.BorrowedCopies + 1, b.Price, b.Category, b.BorrowPeriod) : b).ToList();
 
-                // Update borrowed books list
-                var borrowedBook = BorrowedBooks.FirstOrDefault(bb => bb.BName.Equals(name, StringComparison.OrdinalIgnoreCase));
-                if (borrowedBook.BName != null)
-                {
-                    BorrowedBooks[BorrowedBooks.IndexOf(borrowedBook)] = (borrowedBook.BName, borrowedBook.BorrowedCount + 1);
-                }
-                else
-                {
-                    BorrowedBooks.Add((name, 1));
-                }
+                // Add borrowing record
+                BorrowingRecords.Add((userId, bookId, DateTime.Now, DateTime.Now.AddDays(book.BorrowPeriod), DateTime.MinValue, 0, false));
 
                 Console.WriteLine($"You have successfully borrowed '{book.BName}'.");
-                
             }
             else
             {
