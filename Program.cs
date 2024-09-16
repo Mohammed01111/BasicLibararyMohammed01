@@ -618,7 +618,14 @@ namespace BasicLibrary
             LoadBooks();
             LoadBorrowingRecords();
         }
-
+        static void SaveDataToFiles()
+        {
+            SaveToFile(usersFilePath, Users.Select(u => $"{u.UID}|{u.Uname}|{u.Email}|{u.Password}"));
+            SaveToFile(adminsFilePath, Admins.Select(a => $"{a.AID}|{a.AName}|{a.Email}|{a.Password}"));
+            SaveToFile(categoriesFilePath, Categories.Select(c => $"{c.CID}|{c.CName}|{c.NOFBooks}"));
+            SaveToFile(booksFilePath, Books.Select(b => $"{b.BID}|{b.BName}|{b.BAuthor}|{b.Copies}|{b.BorrowedCopies}|{b.Price}|{b.Category}|{b.BorrowPeriod}"));
+            SaveToFile(borrowingFilePath, BorrowingRecords.Select(r => $"{r.UID}|{r.BID}|{r.BorrowDate}|{r.ReturnDate}|{r.ActualReturnDate}|{r.Rating}|{r.ISReturned}"));
+        }
 
         static void SaveToFile(string filePath, IEnumerable<string> lines)
         {
