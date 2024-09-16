@@ -283,24 +283,59 @@ namespace BasicLibrary
         }
 
 
-        static void AddnNewBook()
+        static void AddNewBook()
         {
-            Console.WriteLine("Enter Book Name");
-            string name = Console.ReadLine();
+            string bookId, name, author, category;
+            int copies, borrowPeriod;
+            decimal price;
 
-            Console.WriteLine("Enter Book Author");
-            string author = Console.ReadLine();
+            // Get Book ID
+            Console.WriteLine("Enter Book ID:");
+            bookId = Console.ReadLine();
+            if (Books.Any(b => b.BID.Equals(bookId, StringComparison.OrdinalIgnoreCase)))
+            {
+                Console.WriteLine("Error: Book ID already exists.");
+                return;
+            }
 
-            
-            int ID = GetIntegerInputWithException("Enter Book ID ");
+            // Get Book Name
+            Console.WriteLine("Enter Book Name:");
+            name = Console.ReadLine();
+            if (Books.Any(b => b.BName.Equals(name, StringComparison.OrdinalIgnoreCase)))
+            {
+                Console.WriteLine("Error: Book name already exists.");
+                return;
+            }
 
-            
-            int qnt = GetIntegerInputWithException("Enter Book Quantity ");
+            // Get Book Author
+            Console.WriteLine("Enter Book Author:");
+            author = Console.ReadLine();
 
+            // Get Book Copies
+            copies = GetIntegerInputWithException1("Enter number of copies (integer):");
 
-            Books.Add((name, author, ID, qnt));
-            Console.WriteLine("Book Added Succefully");
+            // Get Book Price
+            price = GetDecimalInputWithException("Enter book price (decimal):");
 
+            // Get Book Category
+            Console.WriteLine("Enter Book Category:");
+            category = Console.ReadLine();
+            if (!Categories.Any(c => c.CName.Equals(category, StringComparison.OrdinalIgnoreCase)))
+            {
+                Console.WriteLine("Error: Invalid category. Please choose from the following:");
+                foreach (var cat in Categories)
+                {
+                    Console.WriteLine($"- {cat.CName}");
+                }
+                return;
+            }
+
+            // Get Borrow Period
+            borrowPeriod = GetIntegerInputWithException1("Enter borrow period (days):");
+
+            // Add Book
+            Books.Add((bookId, name, author, copies, 0, price, category, borrowPeriod));
+            Console.WriteLine("Book Added Successfully");
         }
         static void EditBook()
         {
