@@ -149,20 +149,27 @@ namespace BasicLibrary
         }
 
 
-        static void UserMenu()
+        static void UserMenu(string userId)
         {
-
-            bool ExitFlag = false;
+            bool exitFlag = false;
 
             do
             {
-                Console.WriteLine("Welcome User");
-                Console.WriteLine("\n Enter the char of operation you need :");
-                Console.WriteLine("\n A- Search for Book by Name");
-                Console.WriteLine("\n B- Borrow Book");
-                Console.WriteLine("\n C- Return Book ");
+                // Check for overdue books
+                bool hasOverdueBooks = BorrowingRecords.Any(r => r.UID.Equals(userId, StringComparison.OrdinalIgnoreCase) && r.ReturnDate < DateTime.Now && !r.ISReturned);
 
-                Console.WriteLine("\n D- Save and Exit");
+                Console.WriteLine("Welcome User");
+                Console.WriteLine("\nEnter the char of operation you need:");
+                Console.WriteLine("\n A- Search for Book by Name");
+
+                if (!hasOverdueBooks)
+                {
+                    Console.WriteLine("\n B- Borrow Book");
+                }
+
+                Console.WriteLine("\n C- Return Book ");
+                Console.WriteLine("\n D- View User profile ");
+                Console.WriteLine("\n F- Save and Exit");
 
                 string choice = Console.ReadLine().ToUpper();
 
@@ -173,7 +180,14 @@ namespace BasicLibrary
                         break;
 
                     case "B":
-                        BorrowBook();
+                        if (!hasOverdueBooks)
+                        {
+                            BorrowBook();
+                        }
+                        else
+                        {
+                            Console.WriteLine("You have overdue books. You can only return books.");
+                        }
                         break;
 
                     case "C":
@@ -181,25 +195,22 @@ namespace BasicLibrary
                         break;
 
                     case "D":
-                        ExitFlag = true;
+                        ViewUserProfile();
+                        break;
+
+                    case "F":
+                        exitFlag = true;
                         break;
 
                     default:
-                        Console.WriteLine("Sorry your choice was wrong");
+                        Console.WriteLine("Sorry, your choice was wrong.");
                         break;
-
-
-
                 }
 
-                Console.WriteLine("press any key to continue");
-                string cont = Console.ReadLine();
-
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadLine();
                 Console.Clear();
-
-            } while (ExitFlag != true);
-            
-
+            } while (!exitFlag);
         }
 
 
