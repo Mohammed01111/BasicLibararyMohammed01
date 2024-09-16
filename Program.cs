@@ -90,7 +90,7 @@ namespace BasicLibrary
         }
         static void AdminMenu()
         {
-            bool ExitFlag = false;
+            bool exitFlag = false;
 
             do
             {
@@ -101,14 +101,15 @@ namespace BasicLibrary
                 Console.WriteLine("\n C- Edit Book");
                 Console.WriteLine("\n D- Remove Book");
                 Console.WriteLine("\n E- Search for Book by Name");
-                Console.WriteLine("\n F- Save and Exit");
+                Console.WriteLine("\n F- Show reports");
+                Console.WriteLine("\n G- Save and Exit");
 
                 string choice = Console.ReadLine().ToUpper();
 
                 switch (choice)
                 {
                     case "A":
-                        AddnNewBook();
+                        AddNewBook();
                         break;
 
                     case "B":
@@ -126,30 +127,25 @@ namespace BasicLibrary
                     case "E":
                         SearchForBook();
                         break;
-                    
 
                     case "F":
-                        SaveBooksToFile();
-                        ExitFlag = true;
-
+                        AdminReports();
                         break;
-                    
+
+                    case "G":
+                        SaveDataToFiles();
+                        exitFlag = true;
+                        break;
 
                     default:
                         Console.WriteLine("Sorry your choice was wrong");
                         break;
-
-
-
                 }
 
-                Console.WriteLine("press any key to continue");
-                string cont = Console.ReadLine();
-
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadLine();
                 Console.Clear();
-
-            } while (ExitFlag != true);
-
+            } while (!exitFlag);
         }
 
 
