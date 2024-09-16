@@ -61,38 +61,32 @@ namespace BasicLibrary
                 }
             } while (!exitFlag);
         }
-        static bool Authenticate(string role)
+        static string Authenticate(string userType)
         {
-            string filePath = role == "admin" ? adminFilePath : userFilePath;
-            Console.WriteLine($"Enter {role} username:");
-            string username = Console.ReadLine();
+            Console.WriteLine($"Enter {userType} Name:");
+            string name = Console.ReadLine().Trim();
+            Console.WriteLine($"Enter {userType} Password:");
+            string password = Console.ReadLine().Trim();
 
-            Console.WriteLine($"Enter {role} password:");
-            string password = Console.ReadLine();
-
-            try
+            if (userType == "admin")
             {
-                var credentials = File.ReadAllLines(filePath);
-                foreach (var credential in credentials)
+                var admin = Admins.FirstOrDefault(a => a.AName.Equals(name, StringComparison.OrdinalIgnoreCase) && a.Password.Equals(password));
+                if (admin.AID != null)
                 {
-                    var parts = credential.Split(':');
-                    if (parts.Length == 2)
-                    {
-                        if (username == parts[0] && password == parts[1])
-                        {
-                            Console.WriteLine($"{role} authenticated successfully.");
-                            return true;
-                        }
-                    }
+                    return admin.AID; // Return admin ID if authenticated
                 }
-                Console.WriteLine($"{role} authentication failed.");
-                return false;
             }
-            catch (Exception ex)
+            else if (userType == "user")
             {
-                Console.WriteLine($"Error reading credentials file: {ex.Message}");
-                return false;
+                var user = Users.FirstOrDefault(u => u.Uname.Equals(name, StringComparison.OrdinalIgnoreCase) && u.Password.Equals(password));
+                if (user.UID != null)
+                {
+                    return user.UID; // Return user ID if authenticated
+                }
             }
+
+            Console.WriteLine("Invalid Name or Password.");
+            return null;
         }
         static void AdminMenu()
         {
