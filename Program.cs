@@ -461,25 +461,33 @@ namespace BasicLibrary
 
         static void ViewAllBooks()
         {
+            // Calculate maximum widths for each column based on the book data
+            int nameWidth = Books.Max(book => book.BName.Length) + 2; // Adding some padding
+            int authorWidth = Books.Max(book => book.BAuthor.Length) + 2;
+            int idWidth = Books.Max(book => book.BID.ToString().Length) + 2;
+            int copiesWidth = Books.Max(book => book.Copies.ToString().Length) + 2;
+            int borrowedCopiesWidth = Books.Max(book => book.BorrowedCopies.ToString().Length) + 2;
+            int priceWidth = Books.Max(book => book.Price.ToString("F2").Length) + 2; // Assuming price is a decimal
+            int categoryWidth = Books.Max(book => book.Category.Length) + 2;
+            int borrowPeriodWidth = Books.Max(book => book.BorrowPeriod.ToString().Length) + 2;
+
+            // Use StringBuilder to create formatted output
             StringBuilder sb = new StringBuilder();
 
-            int BookNumber = 0;
+            // Append column headers
+            sb.AppendLine($"{"Book Number",10} {"Name".PadRight(nameWidth)} {"Author".PadRight(authorWidth)} {"ID".PadRight(idWidth)} {"Copies Available".PadRight(copiesWidth)} {"Borrowed Copies".PadRight(borrowedCopiesWidth)} {"Price".PadRight(priceWidth)} {"Category".PadRight(categoryWidth)} {"Borrow Period".PadRight(borrowPeriodWidth)}");
+            sb.AppendLine(new string('-', 10 + nameWidth + authorWidth + idWidth + copiesWidth + borrowedCopiesWidth + priceWidth + categoryWidth + borrowPeriodWidth));
 
-            for (int i = 0; i < Books.Count; i++)
+            // Append book data
+            int bookNumber = 0;
+            foreach (var book in Books)
             {
-                BookNumber = i + 1;
-                sb.Append("Book ").Append(BookNumber).Append(" name : ").Append(Books[i].BName);
-                sb.AppendLine();
-                sb.Append("Book ").Append(BookNumber).Append(" Author : ").Append(Books[i].BAuthor);
-                sb.AppendLine();
-                sb.Append("Book ").Append(BookNumber).Append(" ID : ").Append(Books[i].ID);
-                sb.AppendLine();
-                sb.Append("Book ").Append(BookNumber).Append(" Quantity : ").Append(Books[i].Qnt);
-                sb.AppendLine().AppendLine();
-                Console.WriteLine(sb.ToString());
-                sb.Clear();
-
+                bookNumber++;
+                sb.AppendLine($"{bookNumber,10} {book.BName.PadRight(nameWidth)} {book.BAuthor.PadRight(authorWidth)} {book.BID.ToString().PadRight(idWidth)} {book.Copies.ToString().PadRight(copiesWidth)} {book.BorrowedCopies.ToString().PadRight(borrowedCopiesWidth)} {book.Price.ToString("F2").PadRight(priceWidth)} {book.Category.PadRight(categoryWidth)} {book.BorrowPeriod.ToString().PadRight(borrowPeriodWidth)}");
             }
+
+            // Print the final formatted string
+            Console.WriteLine(sb.ToString());
         }
 
         static void SearchForBook()
