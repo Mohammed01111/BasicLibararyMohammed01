@@ -1,16 +1,23 @@
 ﻿using System.Text;
+using System.Collections.Generic;
 
 namespace BasicLibrary
 {
     internal class Program
     {
-        static List<(string BName, string BAuthor, int ID, int Qnt)> Books = new List<(string BName, string BAuthor, int ID, int Qnt)>();
-        static List<(string BName, int BorrowedCount)> BorrowedBooks = new List<(string BName, int BorrowedCount)>();
+        static List<(string UID, string Uname, string Email, string Password)> Users = new List<(string UID, string Uname, string Email, string Password)>();
+        static List<(string AID, string AName, string Email, string Password)> Admins = new List<(string AID, string AName, string Email, string Password)>();
+        static List<(string CID, string CName, int NOFBooks)> Categories = new List<(string CID, string CName, int NOFBooks)>();
+        static List<(string BID, string BName, string BAuthor, int Copies, int BorrowedCopies, decimal Price, string Category, int BorrowPeriod)> Books = new List<(string BID, string BName, string BAuthor, int Copies, int BorrowedCopies, decimal Price, string Category, int BorrowPeriod)>();
+        static List<(string UID, string BID, DateTime BorrowDate, DateTime ReturnDate, DateTime ActualReturnDate, int Rating, bool ISReturned)> BorrowingRecords = new List<(string UID, string BID, DateTime BorrowDate, DateTime ReturnDate, DateTime ActualReturnDate, int Rating, bool ISReturned)>();
+
 
         static string filePath = "C:\\Users\\codeline user\\Documents\\lib.txt";
+        static string borrowingFilePath = "C:\\Users\\codeline user\\Documents\\borrowing.txt";
         static string adminFilePath = "C:\\Users\\codeline user\\Documents\\admin.txt";
         static string userFilePath = "C:\\Users\\codeline user\\Documents\\user.txt";
-        static string evalFilePath = "C:\\Users\\codeline user\\Documents\\book_evaluations.txt";
+
+        
 
         static void Main(string[] args)
         //checkout
@@ -246,7 +253,7 @@ namespace BasicLibrary
                 }
 
                 Console.WriteLine($"You have successfully borrowed '{book.BName}'.");
-                RecommendBooks();
+                
             }
             else
             {
@@ -260,22 +267,24 @@ namespace BasicLibrary
             Console.WriteLine("Enter the book name you want to return:");
             string name = Console.ReadLine();
 
+            // Find the book in the Books list
             for (int i = 0; i < Books.Count; i++)
             {
                 var book = Books[i];
 
+                // Check if the book name matches
                 if (book.BName.Equals(name, StringComparison.OrdinalIgnoreCase))
                 {
                     // Update book quantity
                     Books[i] = (book.BName, book.BAuthor, book.ID, book.Qnt + 1);
 
                     // Update borrowed books list
-                    var borrowedBook = BorrowedBooks.FirstOrDefault(bb => bb.BookName.Equals(name, StringComparison.OrdinalIgnoreCase));
-                    if (borrowedBook.BookName != null)
+                    var borrowedBook = BorrowedBooks.FirstOrDefault(bb => bb.BName.Equals(name, StringComparison.OrdinalIgnoreCase));
+                    if (borrowedBook.BName != null)
                     {
                         if (borrowedBook.BorrowedCount > 1)
                         {
-                            BorrowedBooks[BorrowedBooks.IndexOf(borrowedBook)] = (borrowedBook.BookName, borrowedBook.BorrowedCount - 1);
+                            BorrowedBooks[BorrowedBooks.IndexOf(borrowedBook)] = (borrowedBook.BName, borrowedBook.BorrowedCount - 1);
                         }
                         else
                         {
@@ -290,45 +299,7 @@ namespace BasicLibrary
 
             Console.WriteLine("Book not found.");
         }
-        static void RecommendBooks()
-        {
-            if (BorrowedBooks.Count == 0)
-            {
-                Console.WriteLine("No recommendations available as no books have been borrowed yet.");
-                return;
-            }
-
-            Console.WriteLine("Recommended Books based on your borrowed books:");
-
-            var topBorrowedBooks = BorrowedBooks.OrderByDescending(bb => bb.BorrowedCount).ToList();
-            var recommendedBooks = new HashSet<string>();
-
-            foreach (var borrowedBook in topBorrowedBooks)
-            {
-                var bookName = borrowedBook.BookName;
-
-                var bookAuthor = Books.FirstOrDefault(b => b.BName.Equals(bookName, StringComparison.OrdinalIgnoreCase)).BAuthor;
-
-                if (bookAuthor != null)
-                {
-                    foreach (var book in Books.Where(b => b.BAuthor == bookAuthor && b.BName != bookName))
-                    {
-                        if (!recommendedBooks.Contains(book.BName))
-                        {
-                            recommendedBooks.Add(book.BName);
-                            Console.WriteLine($"- '{book.BName}' by {book.BAuthor}");
-                        }
-                    }
-                }
-            }
-
-            if (recommendedBooks.Count == 0)
-            {
-                Console.WriteLine("No recommendations available based on the borrowed books.");
-            }
-        }
-
-
+        
 
         static void AddnNewBook()
         {
@@ -499,6 +470,7 @@ namespace BasicLibrary
                     }
                 }
                 Console.WriteLine("Books saved to file successfully.");
+
             }
             catch (Exception ex)
             {
