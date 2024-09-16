@@ -337,6 +337,37 @@ namespace BasicLibrary
             Books.Add((bookId, name, author, copies, 0, price, category, borrowPeriod));
             Console.WriteLine("Book Added Successfully");
         }
+        // Helper function to get integer input
+        static int GetIntegerInputWithException1(string prompt)
+        {
+            int result;
+            while (true)
+            {
+                Console.WriteLine(prompt);
+                string input = Console.ReadLine();
+                if (int.TryParse(input, out result))
+                {
+                    return result;
+                }
+                Console.WriteLine("Invalid input. Please enter a valid integer.");
+            }
+        }
+
+        // Helper function to get decimal input
+        static decimal GetDecimalInputWithException1(string prompt)
+        {
+            decimal result;
+            while (true)
+            {
+                Console.WriteLine(prompt);
+                string input = Console.ReadLine();
+                if (decimal.TryParse(input, out result))
+                {
+                    return result;
+                }
+                Console.WriteLine("Invalid input. Please enter a valid decimal number.");
+            }
+        }
         static void EditBook()
         {
             Console.WriteLine("Enter the Book ID to edit:");
