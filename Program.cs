@@ -544,22 +544,35 @@ namespace BasicLibrary
 
         static void SearchForBook()
         {
-            Console.WriteLine("Enter the book name you want");
-            string name = Console.ReadLine();
-            bool flag = false;
+            Console.WriteLine("Enter the book name you want to search:");
+            string searchTerm = Console.ReadLine().Trim();
 
-            for (int i = 0; i < Books.Count; i++)
+            bool found = false;
+
+            foreach (var book in Books)
             {
-                if (Books[i].BName == name)
+                // Check if the book name contains the search term, ignoring case
+                if (book.BName.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    Console.WriteLine("Book Author is : " + Books[i].BAuthor);
-                    flag = true;
-                    break;
+                    // Display all details of the matching book
+                    Console.WriteLine($"Book ID: {book.BID}");
+                    Console.WriteLine($"Book Name: {book.BName}");
+                    Console.WriteLine($"Book Author: {book.BAuthor}");
+                    Console.WriteLine($"Copies Available: {book.Copies}");
+                    Console.WriteLine($"Borrowed Copies: {book.BorrowedCopies}");
+                    Console.WriteLine($"Price: {book.Price}");
+                    Console.WriteLine($"Category: {book.Category}");
+                    Console.WriteLine($"Borrow Period (days): {book.BorrowPeriod}");
+                    Console.WriteLine(new string('-', 50)); // Separator line for readability
+
+                    found = true;
                 }
             }
 
-            if (flag != true)
-            { Console.WriteLine("book not found"); }
+            if (!found)
+            {
+                Console.WriteLine("No books found with the given search term.");
+            }
         }
 
         static int GetIntegerInputWithException(string prompt)
