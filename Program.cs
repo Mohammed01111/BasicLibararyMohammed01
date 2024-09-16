@@ -418,54 +418,46 @@ namespace BasicLibrary
             Books[bookIndex] = book;
             Console.WriteLine("Book details updated successfully.");
         }
-        static void EditBook()
-        {
-            Console.WriteLine("Enter the Book ID to edit:");
-            int id = GetIntegerInputWithException("");
 
-            for (int i = 0; i < Books.Count; i++)
-            {
-                var book = Books[i];
 
-                if (book.ID == id)
-                {
-                    Console.WriteLine("Enter new Book Name (or press Enter to keep current):");
-                    string name = Console.ReadLine();
-                    if (!string.IsNullOrEmpty(name)) book.BName = name;
-
-                    Console.WriteLine("Enter new Book Author (or press Enter to keep current):");
-                    string author = Console.ReadLine();
-                    if (!string.IsNullOrEmpty(author)) book.BAuthor = author;
-
-                    Console.WriteLine("Enter new Book Quantity (or press Enter to keep current):");
-                    string quantityInput = Console.ReadLine();
-                    if (int.TryParse(quantityInput, out int quantity)) book.Qnt = quantity;
-
-                    Books[i] = book;
-                    Console.WriteLine("Book details updated successfully.");
-                    return;
-                }
-            }
-
-            Console.WriteLine("Book not found.");
-        }
         static void RemoveBook()
         {
             Console.WriteLine("Enter the Book ID to remove:");
-            int id = GetIntegerInputWithException("");
+            string id = Console.ReadLine();
 
-            for (int i = 0; i < Books.Count; i++)
+            // Find the index of the book to be removed
+            int bookIndex = Books.FindIndex(b => b.BID == id);
+
+            if (bookIndex == -1)
             {
-                if (Books[i].ID == id)
-                {
-                    Books.RemoveAt(i);
-                    Console.WriteLine("Book removed successfully.");
-                    return;
-                }
+                Console.WriteLine("Book not found.");
+                return;
             }
 
-            Console.WriteLine("Book not found.");
+            var book = Books[bookIndex];
+
+            // Check if the book has any borrowed copies
+            if (book.BorrowedCopies > 0)
+            {
+                Console.WriteLine($"The book cannot be removed because it has {book.BorrowedCopies} borrowed copies.");
+                return;
+            }
+
+            Console.WriteLine("Do you want to remove this book? (yes/no)");
+            string confirm = Console.ReadLine();
+
+            if (confirm.Equals("yes", StringComparison.OrdinalIgnoreCase))
+            {
+                Books.RemoveAt(bookIndex);
+                Console.WriteLine("Book removed successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Book removal cancelled.");
+            }
         }
+
+
 
         static void ViewAllBooks()
         {
