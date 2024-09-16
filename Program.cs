@@ -23,10 +23,10 @@ namespace BasicLibrary
 
         static void Main(string[] args)
         //checkout
-        {// downloaded form ahmed device 
-            bool ExitFlag = false;
+        {
+            LoadDataFromFiles();
 
-            LoadBooksFromFile();
+            bool exitFlag = false;
 
             do
             {
@@ -34,34 +34,32 @@ namespace BasicLibrary
                 string choice = Console.ReadLine();
                 switch (choice)
                 {
-
                     case "1":
-                        if (Authenticate("admin"))
+                        var adminId = Authenticate("admin");
+                        if (adminId != null)
                         {
                             AdminMenu();
                         }
                         break;
 
                     case "2":
-                        if (Authenticate("user"))
+                        var userId = Authenticate("user");
+                        if (userId != null)
                         {
-                            UserMenu();
+                            UserMenu(userId); // Pass userId to UserMenu
                         }
                         break;
 
                     case "3":
-                        SaveBooksToFile();
-                        ExitFlag = true;
+                        SaveDataToFiles();
+                        exitFlag = true;
                         break;
 
                     default:
                         Console.WriteLine("Enter Correct Choice");
                         break;
                 }
-            } while (ExitFlag != true);
-
-
-
+            } while (!exitFlag);
         }
         static bool Authenticate(string role)
         {
