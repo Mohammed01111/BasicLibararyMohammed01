@@ -620,23 +620,14 @@ namespace BasicLibrary
         }
 
 
-        static void SaveBooksToFile()
+        static void SaveToFile(string filePath, IEnumerable<string> lines)
         {
-            try
+            using (StreamWriter writer = new StreamWriter(filePath))
             {
-                using (StreamWriter writer = new StreamWriter(filePath))
+                foreach (var line in lines)
                 {
-                    foreach (var book in Books)
-                    {
-                        writer.WriteLine($"{book.BName}|{book.BAuthor}|{book.ID}|{book.Qnt}");
-                    }
+                    writer.WriteLine(line);
                 }
-                Console.WriteLine("Books saved to file successfully.");
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving to file: {ex.Message}");
             }
         }
 
