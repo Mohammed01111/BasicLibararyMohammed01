@@ -592,7 +592,23 @@ namespace BasicLibrary
                 }
             }
         }
+        static decimal GetDecimalInputWithException(string prompt)
+        {
+            while (true)
+            {
+                Console.WriteLine(prompt);
+                string input = Console.ReadLine();
 
+                try
+                {
+                    return Convert.ToDecimal(input);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid decimal.");
+                }
+            }
+        }
 
         static void LoadBooksFromFile()
         {
@@ -620,6 +636,7 @@ namespace BasicLibrary
                 Console.WriteLine($"Error loading from file: {ex.Message}");
             }
         }
+
 
         static void SaveBooksToFile()
         {
