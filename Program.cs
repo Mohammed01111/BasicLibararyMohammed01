@@ -259,42 +259,29 @@ namespace BasicLibrary
 
         static void ReturnBook()
         {
-            Console.WriteLine("Enter the book name you want to return:");
-            string name = Console.ReadLine();
+            Console.WriteLine("Enter your User ID:");
+            string userId = Console.ReadLine();
 
-            // Find the book in the Books list
-            for (int i = 0; i < Books.Count; i++)
+            Console.WriteLine("Enter the book ID you want to return:");
+            string bookId = Console.ReadLine();
+
+            var record = BorrowingRecords.FirstOrDefault(r => r.UID.Equals(userId, StringComparison.OrdinalIgnoreCase) && r.BID.Equals(bookId, StringComparison.OrdinalIgnoreCase) && !r.ISReturned);
+
+            if (record.UID == null)
             {
-                var book = Books[i];
-
-                // Check if the book name matches
-                if (book.BName.Equals(name, StringComparison.OrdinalIgnoreCase))
-                {
-                    // Update book quantity
-                    Books[i] = (book.BName, book.BAuthor, book.ID, book.Qnt + 1);
-
-                    // Update borrowed books list
-                    var borrowedBook = BorrowedBooks.FirstOrDefault(bb => bb.BName.Equals(name, StringComparison.OrdinalIgnoreCase));
-                    if (borrowedBook.BName != null)
-                    {
-                        if (borrowedBook.BorrowedCount > 1)
-                        {
-                            BorrowedBooks[BorrowedBooks.IndexOf(borrowedBook)] = (borrowedBook.BName, borrowedBook.BorrowedCount - 1);
-                        }
-                        else
-                        {
-                            BorrowedBooks.Remove(borrowedBook);
-                        }
-                    }
-
-                    Console.WriteLine($"You have successfully returned '{book.BName}'.");
-                    return;
-                }
+                Console.WriteLine("No active borrowing record found for this book.");
+                return;
             }
 
-            Console.WriteLine("Book not found.");
+            // Update book copies
+            Books = Books.Select(b => b.BID == bookId ? (b.BID, b.BName, b.BAuthor, b.Copies + 1, b.BorrowedCopies - 1, b.Price, b.Category, b.BorrowPeriod) : b).ToList();
+
+            // Update borrowing record
+            BorrowingRecords = BorrowingRecords.Select(r => r.UID == userId && r.BID == bookId ? (r.UID, r.BID, r.BorrowDate, r.ReturnDate, DateTime.Now, r.Rating, true) : r).ToList();
+
+            Console.WriteLine($"You have successfully returned '{Books.FirstOrDefault(b => b.BID == bookId).BName}'.");
         }
-        
+
 
         static void AddnNewBook()
         {
