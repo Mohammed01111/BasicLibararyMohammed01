@@ -489,6 +489,25 @@ namespace BasicLibrary
             // Print the final formatted string
             Console.WriteLine(sb.ToString());
         }
+        static void ViewUserProfile()
+        {
+            Console.WriteLine("Enter your User ID:");
+            string userId = Console.ReadLine();
+
+            var user = Users.FirstOrDefault(u => u.UID.Equals(userId, StringComparison.OrdinalIgnoreCase));
+
+            if (user.UID != null)
+            {
+                Console.WriteLine($"User ID: {user.UID}");
+                Console.WriteLine($"Name: {user.Uname}");
+                Console.WriteLine($"Email: {user.Email}");
+            }
+            else
+            {
+                Console.WriteLine("User not found.");
+            }
+        }
+
 
         static void SearchForBook()
         {
