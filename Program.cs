@@ -371,6 +371,56 @@ namespace BasicLibrary
         static void EditBook()
         {
             Console.WriteLine("Enter the Book ID to edit:");
+            string id = Console.ReadLine();
+
+            // Find the index of the book to be edited
+            int bookIndex = Books.FindIndex(b => b.BID == id);
+
+            if (bookIndex == -1)
+            {
+                Console.WriteLine("Book not found.");
+                return;
+            }
+
+            var book = Books[bookIndex];
+
+            Console.WriteLine("Enter new Book Name (or press Enter to keep current):");
+            string newName = Console.ReadLine();
+            if (!string.IsNullOrEmpty(newName))
+            {
+                // Check for duplicate book names
+                if (Books.Any(b => b.BName.Equals(newName, StringComparison.OrdinalIgnoreCase) && b.BID != id))
+                {
+                    Console.WriteLine("A book with this name already exists.");
+                    return;
+                }
+                book.BName = newName;
+            }
+
+            Console.WriteLine("Enter new Book Author (or press Enter to keep current):");
+            string newAuthor = Console.ReadLine();
+            if (!string.IsNullOrEmpty(newAuthor)) book.BAuthor = newAuthor;
+
+            Console.WriteLine("Enter new Book Copies (or press Enter to keep current):");
+            string copiesInput = Console.ReadLine();
+            if (int.TryParse(copiesInput, out int newCopies))
+            {
+                // Ensure the number of copies doesn't decrease
+                if (newCopies < book.Copies)
+                {
+                    Console.WriteLine("The number of copies cannot be decreased.");
+                    return;
+                }
+                book.Copies = newCopies;
+            }
+
+            // Update the book details in the list
+            Books[bookIndex] = book;
+            Console.WriteLine("Book details updated successfully.");
+        }
+        static void EditBook()
+        {
+            Console.WriteLine("Enter the Book ID to edit:");
             int id = GetIntegerInputWithException("");
 
             for (int i = 0; i < Books.Count; i++)
