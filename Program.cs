@@ -507,6 +507,39 @@ namespace BasicLibrary
                 Console.WriteLine("User not found.");
             }
         }
+        static void AdminReports()
+        {
+            // Ensure Categories are loaded
+            LoadCategories();
+
+            Console.WriteLine("Books per Category Report:");
+
+            // Ensure we have data
+            if (Books.Count == 0)
+            {
+                Console.WriteLine("No books available to report.");
+                return;
+            }
+
+            // Load Categories to ensure they are up-to-date
+            LoadCategories();
+
+            // Group books by category and count them
+            var bookCountsByCategory = Books
+                .GroupBy(b => b.Category)
+                .Select(g => new { Category = g.Key, Count = g.Count() })
+                .ToList();
+
+            // Print the report
+            foreach (var category in Categories)
+            {
+                // Find the count of books for this category
+                var count = bookCountsByCategory
+                    .FirstOrDefault(b => b.Category.Equals(category.CName, StringComparison.OrdinalIgnoreCase))?.Count ?? 0;
+
+                Console.WriteLine($"Category: {category.CName}, Number of Books: {count}");
+            }
+        }
 
 
         static void SearchForBook()
