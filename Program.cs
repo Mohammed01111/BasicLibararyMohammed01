@@ -12,12 +12,14 @@ namespace BasicLibrary
         static List<(string UID, string BID, DateTime BorrowDate, DateTime ReturnDate, DateTime ActualReturnDate, int Rating, bool ISReturned)> BorrowingRecords = new List<(string UID, string BID, DateTime BorrowDate, DateTime ReturnDate, DateTime ActualReturnDate, int Rating, bool ISReturned)>();
 
 
-        static string filePath = "C:\\Users\\codeline user\\Documents\\lib.txt";
-        static string borrowingFilePath = "C:\\Users\\codeline user\\Documents\\borrowing.txt";
-        static string adminFilePath = "C:\\Users\\codeline user\\Documents\\admin.txt";
-        static string userFilePath = "C:\\Users\\codeline user\\Documents\\user.txt";
+        // File paths
+        static string usersFilePath = "C:\\Users\\codeline user\\Documents\\test\\UsersFile.txt";
+        static string adminsFilePath = "C:\\Users\\codeline user\\Documents\\test\\AdminsFile.txt";
+        static string categoriesFilePath = "C:\\Users\\codeline user\\Documents\\test\\CategoriesFile.txt";
+        static string booksFilePath = "C:\\Users\\codeline user\\Documents\\test\\BooksFile.txt";
+        static string borrowingFilePath = "C:\\Users\\codeline user\\Documents\\test\\BorrowingFile.txt";
 
-        
+
 
         static void Main(string[] args)
         //checkout
